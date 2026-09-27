@@ -75,7 +75,14 @@ assert list(whc_model.classes_) == [0, 1, 2, 3]
 
 WHC_THRESHOLD = whc_metadata["lift_analysis"]["logistic_regression_tuned_threshold"]["threshold"]
 
-app = FastAPI(title="Weather Intelligence API")
+app = FastAPI(
+    title="Weather Intelligence API",
+    version="1.0.0",
+    description=(
+        "Predicts Sydney's Climate Comfort Index (3-day outlook) and Weather "
+        "Hazard Category (7-day outlook) from Open-Meteo historical weather data."
+    ),
+)
 
 # --- Fetching and feature building ------------------------------------------
 
@@ -179,6 +186,23 @@ def pick_whc_label(class_probabilities: np.ndarray) -> str:
 
 API_GITHUB_URL = "https://github.com/shruthimurali05/AT2-api"
 
+# Shared error response docs for the two predict endpoints, so /docs shows a
+# real example instead of a generic "string" schema for each status code.
+COMMON_ERROR_RESPONSES = {
+    400: {
+        "description": "Date too early, or today/in the future (Sydney time)",
+        "content": {"application/json": {"example": {"detail": "date must be yesterday or earlier (Sydney time); latest valid date is 2026-09-26"}}},
+    },
+    404: {
+        "description": "Unknown route",
+        "content": {"application/json": {"example": {"detail": "Not Found"}}},
+    },
+    503: {
+        "description": "Open-Meteo is unreachable or timed out",
+        "content": {"application/json": {"example": {"detail": "Open-Meteo weather service is unavailable: ..."}}},
+    },
+}
+
 
 @app.get("/")
 def root():
@@ -209,7 +233,18 @@ def health():
     return {"status": "healthy", "message": "Weather Intelligence API is running"}
 
 
-@app.get("/predict/index/comfort_climate")
+@app.get(
+    "/predict/index/comfort_climate",
+    responses={
+        200: {
+            "content": {"application/json": {"example": {
+                "input_date": "2025-01-01",
+                "predictions": {"comfort_climate": {"2025-01-02": 72, "2025-01-03": 76, "2025-01-04": 81}},
+            }}},
+        },
+        **COMMON_ERROR_RESPONSES,
+    },
+)
 def predict_comfort_climate(
     date: dt.date = Query(..., description="Input date (YYYY-MM-DD), Sydney time"),
 ):
@@ -231,7 +266,18 @@ def predict_comfort_climate(
     return {"input_date": date.isoformat(), "predictions": {"comfort_climate": predictions}}
 
 
-@app.get("/predict/category/weather_hazard")
+@app.get(
+    "/predict/category/weather_hazard",
+    responses={
+        200: {
+            "content": {"application/json": {"example": {
+                "input_date": "2025-01-01",
+                "predictions": {"weather_hazard": {"2025-01-08": "Moderate Risk"}},
+            }}},
+        },
+        **COMMON_ERROR_RESPONSES,
+    },
+)
 def predict_weather_hazard(
     date: dt.date = Query(..., description="Input date (YYYY-MM-DD), Sydney time"),
 ):
