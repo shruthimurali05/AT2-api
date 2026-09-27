@@ -185,6 +185,7 @@ def pick_whc_label(class_probabilities: np.ndarray) -> str:
 # --- Endpoints ---------------------------------------------------------------
 
 API_GITHUB_URL = "https://github.com/shruthimurali05/AT2-api"
+LIVE_URL = "https://at2-api-26170922.onrender.com"
 
 # Shared error response docs for the two predict endpoints, so /docs shows a
 # real example instead of a generic "string" schema for each status code.
@@ -214,6 +215,7 @@ def root():
         ),
         "version": "1.0.0",
         "github": API_GITHUB_URL,
+        "live_url": LIVE_URL,
         "endpoints": [
             "/",
             "/health",

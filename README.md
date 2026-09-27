@@ -7,7 +7,7 @@
 FastAPI application serving two machine learning models trained on Open-Meteo
 historical weather data for Sydney. Deployed on Render.
 
-- Live API: `<add Render URL>` (Phase 6)
+- Live API: https://at2-api-26170922.onrender.com
 - Experimentation repository: https://github.com/shruthimurali05/AT2---Machine-Learning-as-a-Service
 - Package repository: https://github.com/shruthimurali05/36120-26SP-group31-26170922-package
 
@@ -166,17 +166,21 @@ models, so the pickled/joblib model files load correctly.
 8. Once live, test every endpoint on the Render URL (see curl examples below,
    replacing `localhost:8000` with the Render URL), including bad inputs.
 
-Live API: **`<add Render URL>`**
+Live API: **https://at2-api-26170922.onrender.com**
 
 ### Example curl requests
 
 ```
-curl https://<render-url>/
-curl https://<render-url>/health
-curl "https://<render-url>/predict/index/comfort_climate?date=2024-06-15"
-curl "https://<render-url>/predict/category/weather_hazard?date=2024-06-15"
-curl https://<render-url>/model-metadata
+curl https://at2-api-26170922.onrender.com/
+curl https://at2-api-26170922.onrender.com/health
+curl "https://at2-api-26170922.onrender.com/predict/index/comfort_climate?date=2024-06-15"
+curl "https://at2-api-26170922.onrender.com/predict/category/weather_hazard?date=2024-06-15"
+curl https://at2-api-26170922.onrender.com/model-metadata
 ```
+
+All 5 endpoints and every error case (missing/malformed/impossible date -> 422,
+too early/today/future -> 400, unknown route -> 404) were tested against this live
+URL and matched local/Docker behaviour exactly.
 
 Responses match the examples earlier in this README. A bad date, e.g.
 `?date=2030-01-01` (future) or `?date=1800-01-01` (too early), returns a 400 with
