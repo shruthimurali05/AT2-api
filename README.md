@@ -115,8 +115,9 @@ predictions for older dates - noted here and in the final report as a limitation
 │   └── main.py        <- FastAPI application
 ├── models             <- Trained model files + metadata.json, copied from the
 │                          experiments repo's final models
-├── tests               <- pytest + TestClient tests, Open-Meteo mocked
-├── Dockerfile          (Phase 6)
+├── tests              <- pytest + TestClient tests, Open-Meteo mocked
+├── Dockerfile
+├── .dockerignore
 ├── requirements.txt
 ├── pyproject.toml
 └── README.md
@@ -140,6 +141,55 @@ pytest tests/ -v
 
 Open-Meteo is mocked in every test - no real network calls are made.
 
+## Run with Docker
+
+```
+docker build -t at2-api .
+docker run -p 8000:8000 -e PORT=8000 at2-api
+```
+
+Then open http://localhost:8000/docs, same as running locally. The Dockerfile uses
+the same Python version (3.11.16) as the conda env used to train and save the
+models, so the pickled/joblib model files load correctly.
+
 ## Deploy on Render
 
-_To be completed in Phase 6._
+1. Push this repo to GitHub (already done - it's private, owner shruthimurali05).
+2. On [render.com](https://render.com), sign in (GitHub sign-in is fine), then
+   **New -> Web Service**.
+3. Connect the private **AT2-api** repo.
+4. Runtime: **Docker** (Render finds the Dockerfile automatically).
+5. Instance type: **Free**.
+6. Health check path: `/health`.
+7. Create the service. Render builds the image and deploys it - the first build
+   takes a few minutes.
+8. Once live, test every endpoint on the Render URL (see curl examples below,
+   replacing `localhost:8000` with the Render URL), including bad inputs.
+
+Live API: **`<add Render URL>`**
+
+### Example curl requests
+
+```
+curl https://<render-url>/
+curl https://<render-url>/health
+curl "https://<render-url>/predict/index/comfort_climate?date=2024-06-15"
+curl "https://<render-url>/predict/category/weather_hazard?date=2024-06-15"
+curl https://<render-url>/model-metadata
+```
+
+Responses match the examples earlier in this README. A bad date, e.g.
+`?date=2030-01-01` (future) or `?date=1800-01-01` (too early), returns a 400 with
+a `detail` message; a missing or malformed date returns 422.
+
+### Troubleshooting
+
+- **Cold start (~30-60s):** Render's free tier spins the service down after a period
+  of inactivity. The first request after that delay will be slow while it starts
+  back up - this is expected, not a bug.
+- **Open-Meteo rate limits or timeouts:** the API returns a 503 with a `detail`
+  message rather than crashing. Retrying after a short wait usually works.
+- **Model/library version mismatch:** the Dockerfile installs the exact versions
+  pinned in `requirements.txt`, matching the versions used to train and save the
+  models in the experiments repo. If a model file fails to load, check that
+  `requirements.txt` here still matches the experiments repo's pinned versions.
