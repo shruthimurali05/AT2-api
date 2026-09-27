@@ -1,0 +1,13 @@
+--extra-index-url https://test.pypi.org/simple/
+
+nba-career-predictor-26170922==0.2.1
+pandas==2.2.3
+numpy==1.26.4
+scikit-learn==1.9.1
+xgboost==2.0.3
+joblib==1.6.0
+requests==2.31.0
+fastapi==0.141.1
+uvicorn[standard]==0.54.0
+httpx==0.28.1
+pytest==7.4.4

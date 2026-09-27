@@ -1,0 +1,103 @@
+{
+  "target": "Climate Comfort Index",
+  "prediction_type": "Regression",
+  "algorithm": "XGBoost Regressor (max_depth=2, learning_rate=0.1, n_estimators=100)",
+  "forecast_horizon": "3 Days",
+  "features": [
+    "cci",
+    "cci_lag1",
+    "cci_lag7",
+    "cci_roll3_mean",
+    "cci_roll7_mean",
+    "cci_roll14_mean",
+    "cci_roll30_mean",
+    "et0_fao_evapotranspiration",
+    "et0_fao_evapotranspiration_lag1",
+    "et0_fao_evapotranspiration_roll3_mean",
+    "et0_fao_evapotranspiration_roll7_mean",
+    "shortwave_radiation",
+    "shortwave_radiation_roll3_mean",
+    "temperature_2m",
+    "temperature_2m_roll7_mean",
+    "relative_humidity_2m",
+    "wind_speed_10m",
+    "cloud_cover",
+    "precipitation",
+    "doy_sin",
+    "doy_cos",
+    "month"
+  ],
+  "feature_importance": {
+    "cci": 0.11749999970197678,
+    "cci_lag1": 0.00570000009611249,
+    "cci_lag7": 0.004100000020116568,
+    "cci_roll3_mean": 0.10440000146627426,
+    "cci_roll7_mean": 0.053599998354911804,
+    "cci_roll14_mean": 0.02630000002682209,
+    "cci_roll30_mean": 0.0551999993622303,
+    "et0_fao_evapotranspiration": 0.16459999978542328,
+    "et0_fao_evapotranspiration_lag1": 0.0071000000461936,
+    "et0_fao_evapotranspiration_roll3_mean": 0.1979999989271164,
+    "et0_fao_evapotranspiration_roll7_mean": 0.03709999844431877,
+    "shortwave_radiation": 0.021199999377131462,
+    "shortwave_radiation_roll3_mean": 0.00860000029206276,
+    "temperature_2m": 0.027000000700354576,
+    "temperature_2m_roll7_mean": 0.014999999664723873,
+    "relative_humidity_2m": 0.01489999983459711,
+    "wind_speed_10m": 0.006899999920278788,
+    "cloud_cover": 0.00989999994635582,
+    "precipitation": 0.012199999764561653,
+    "doy_sin": 0.00860000029206276,
+    "doy_cos": 0.09179999679327011,
+    "month": 0.010300000198185444
+  },
+  "feature_descriptions": {
+    "cci": "Today's Climate Comfort Index (0-100), computed from the day's own weather.",
+    "cci_lag1": "CCI value 1 day before the input date.",
+    "cci_lag7": "CCI value 7 days before the input date.",
+    "cci_roll3_mean": "3-day rolling mean of CCI, ending on the input date.",
+    "cci_roll7_mean": "7-day rolling mean of CCI.",
+    "cci_roll14_mean": "14-day rolling mean of CCI.",
+    "cci_roll30_mean": "30-day rolling mean of CCI.",
+    "et0_fao_evapotranspiration": "Today's FAO reference evapotranspiration (mm) - a combined measure of how much moisture the atmosphere draws from the ground.",
+    "et0_fao_evapotranspiration_lag1": "Evapotranspiration 1 day before the input date.",
+    "et0_fao_evapotranspiration_roll3_mean": "3-day rolling mean of evapotranspiration.",
+    "et0_fao_evapotranspiration_roll7_mean": "7-day rolling mean of evapotranspiration.",
+    "shortwave_radiation": "Today's shortwave solar radiation reaching the ground (W/m^2).",
+    "shortwave_radiation_roll3_mean": "3-day rolling mean of shortwave radiation.",
+    "temperature_2m": "Today's mean air temperature at 2m (degrees C).",
+    "temperature_2m_roll7_mean": "7-day rolling mean temperature.",
+    "relative_humidity_2m": "Today's mean relative humidity (%).",
+    "wind_speed_10m": "Today's mean wind speed at 10m (km/h).",
+    "cloud_cover": "Today's mean cloud cover (%).",
+    "precipitation": "Today's total precipitation (mm).",
+    "doy_sin": "Sine of day-of-year, capturing the yearly seasonal cycle.",
+    "doy_cos": "Cosine of day-of-year, capturing the yearly seasonal cycle.",
+    "month": "Calendar month (1-12) of the input date."
+  },
+  "performance_metrics_test_set": {
+    "cci_d1": {
+      "MAE": 6.416128,
+      "RMSE": 8.559495,
+      "R2": 0.435338
+    },
+    "cci_d2": {
+      "MAE": 7.18879,
+      "RMSE": 9.700577,
+      "R2": 0.275277
+    },
+    "cci_d3": {
+      "MAE": 7.417863,
+      "RMSE": 9.906433,
+      "R2": 0.244088
+    }
+  },
+  "training_date_range": "2000-01-30 to 2025-12-28",
+  "library_versions": {
+    "python": "3.11.16",
+    "pandas": "2.2.3",
+    "numpy": "1.26.4",
+    "scikit-learn": "1.9.1",
+    "xgboost": "2.0.3"
+  }
+}

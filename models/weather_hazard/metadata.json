@@ -1,0 +1,153 @@
+{
+  "target": "Weather Hazard Category",
+  "prediction_type": "Multiclass Classification",
+  "algorithm": "Logistic Regression (C=0.01, class_weight=balanced, standardised features)",
+  "forecast_horizon": "7 Days",
+  "class_labels": {
+    "0": "Low Risk",
+    "1": "Moderate Risk",
+    "2": "High Risk",
+    "3": "Extreme Risk"
+  },
+  "features": [
+    "whi",
+    "whi_lag1",
+    "whi_lag7",
+    "whi_roll3_max",
+    "whi_roll7_max",
+    "whi_roll14_max",
+    "whi_roll30_max",
+    "precipitation",
+    "precipitation_roll30_sum",
+    "wind_gusts_10m",
+    "wind_gusts_10m_roll14_max",
+    "wind_gusts_10m_roll30_max",
+    "wind_direction_10m_roll30_mean",
+    "cloud_cover",
+    "temperature_2m",
+    "relative_humidity_2m",
+    "wind_speed_10m",
+    "surface_pressure",
+    "doy_sin",
+    "doy_cos",
+    "month"
+  ],
+  "feature_importance": {
+    "whi": 0.0621,
+    "whi_lag1": 0.0302,
+    "whi_lag7": 0.0237,
+    "whi_roll3_max": 0.0379,
+    "whi_roll7_max": 0.0218,
+    "whi_roll14_max": 0.0167,
+    "whi_roll30_max": 0.0384,
+    "precipitation": 0.0374,
+    "precipitation_roll30_sum": 0.041,
+    "wind_gusts_10m": 0.1353,
+    "wind_gusts_10m_roll14_max": 0.0602,
+    "wind_gusts_10m_roll30_max": 0.0712,
+    "wind_direction_10m_roll30_mean": 0.083,
+    "cloud_cover": 0.0191,
+    "temperature_2m": 0.0286,
+    "relative_humidity_2m": 0.0259,
+    "wind_speed_10m": 0.0528,
+    "surface_pressure": 0.0837,
+    "doy_sin": 0.0686,
+    "doy_cos": 0.0475,
+    "month": 0.0149
+  },
+  "feature_descriptions": {
+    "whi": "Today's Weather Hazard Index (0-100), computed from the day's own weather.",
+    "whi_lag1": "WHI value 1 day before the input date.",
+    "whi_lag7": "WHI value 7 days before the input date.",
+    "whi_roll3_max": "Highest WHI in the 3 days up to and including the input date.",
+    "whi_roll7_max": "Highest WHI in the 7 days up to and including the input date.",
+    "whi_roll14_max": "Highest WHI in the 14 days up to and including the input date.",
+    "whi_roll30_max": "Highest WHI in the 30 days up to and including the input date.",
+    "precipitation": "Today's total precipitation (mm).",
+    "precipitation_roll30_sum": "Total precipitation over the past 30 days (mm).",
+    "wind_gusts_10m": "Today's maximum wind gust at 10m (km/h).",
+    "wind_gusts_10m_roll14_max": "Highest single-day wind gust in the past 14 days (km/h).",
+    "wind_gusts_10m_roll30_max": "Highest single-day wind gust in the past 30 days (km/h).",
+    "wind_direction_10m_roll30_mean": "30-day circular mean wind direction (degrees).",
+    "cloud_cover": "Today's mean cloud cover (%).",
+    "temperature_2m": "Today's mean air temperature at 2m (degrees C).",
+    "relative_humidity_2m": "Today's mean relative humidity (%).",
+    "wind_speed_10m": "Today's mean wind speed at 10m (km/h).",
+    "surface_pressure": "Today's mean surface pressure (hPa).",
+    "doy_sin": "Sine of day-of-year, capturing the yearly seasonal cycle.",
+    "doy_cos": "Cosine of day-of-year, capturing the yearly seasonal cycle.",
+    "month": "Calendar month (1-12) of the input date."
+  },
+  "performance_metrics_test_set": {
+    "macro_f1": 0.153394,
+    "balanced_accuracy": 0.410058,
+    "combined_high_or_extreme_recall": 0.541,
+    "combined_high_or_extreme_precision": 0.045,
+    "predicted_high_or_extreme_pct": 61.5,
+    "actual_high_or_extreme_pct": 5.1,
+    "per_class": {
+      "Low Risk": {
+        "precision": 0.42515,
+        "recall": 0.227564,
+        "f1": 0.296451
+      },
+      "Moderate Risk": {
+        "precision": 0.544643,
+        "recall": 0.162667,
+        "f1": 0.250513
+      },
+      "High Risk": {
+        "precision": 0.028754,
+        "recall": 0.25,
+        "f1": 0.051576
+      },
+      "Extreme Risk": {
+        "precision": 0.007576,
+        "recall": 1.0,
+        "f1": 0.015038
+      }
+    }
+  },
+  "lift_analysis": {
+    "default_classification": {
+      "logistic_regression": {
+        "alert_rate": 0.615,
+        "recall": 0.541,
+        "precision": 0.045,
+        "lift": 0.879
+      },
+      "random_forest": {
+        "alert_rate": 0.174,
+        "recall": 0.054,
+        "precision": 0.016,
+        "lift": 0.311
+      },
+      "xgboost": {
+        "alert_rate": 0.099,
+        "recall": 0.027,
+        "precision": 0.014,
+        "lift": 0.272
+      }
+    },
+    "logistic_regression_tuned_threshold": {
+      "threshold": 0.5347228811089046,
+      "threshold_selected_on": "validation set (2022-2023)",
+      "target_validation_alert_rate": 0.12,
+      "actual_validation_alert_rate": 0.121,
+      "test_alert_rate": 0.21,
+      "test_recall": 0.351,
+      "test_precision": 0.086,
+      "test_lift": 1.674,
+      "used_by_api": true,
+      "api_rule": "If P(High Risk) + P(Extreme Risk) >= threshold, return whichever of High Risk / Extreme Risk has the higher probability; otherwise return whichever of Low Risk / Moderate Risk has the higher probability."
+    }
+  },
+  "honest_limitations": "7-day-ahead Weather Hazard Category prediction from local historical weather data alone is barely better than chance (lift close to 1.0 at best) and not a reliable standalone hazard warning system. All model features are derived from PAST daily weather (lags, rolling windows, calendar position) with no information about what is actually forecast to occur on the target date - High/Extreme Risk days are driven by synoptic weather systems that current features cannot see coming. The clearest way to improve this would be adding a real numerical weather forecast feature (e.g. from an NWP forecast product) rather than further tuning of history-only features.",
+  "training_date_range": "2000-01-30 to 2025-12-24",
+  "library_versions": {
+    "python": "3.11.16",
+    "pandas": "2.2.3",
+    "numpy": "1.26.4",
+    "scikit-learn": "1.9.1"
+  }
+}
